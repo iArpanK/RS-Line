@@ -10,7 +10,7 @@
 ### Adding to TradingView Chart
 ---
 
-- Go to [RS Line by @iArpanK]().
+- Go to [RS Line by @iArpanK](https://in.tradingview.com/script/G6MOxSG2-Relative-Strength-Line-by-iArpanK/).
 
 ![RS Line by @iArpanK](https://user-images.githubusercontent.com/80940234/133892175-fc7b0792-1821-4e0e-a33c-6e2075697b65.png)
 
