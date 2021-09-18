@@ -1,0 +1,66 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Arpan_K
+// Relative Strength Line by @iArpanK
+// v1.2
+
+// Find me on twitter @iArpanK
+// Check out my TradingView RS indicator at https://in.tradingview.com/script/G6MOxSG2-Relative-Strength-Line-by-iArpanK/
+
+//@version=4
+study("Relative Strength Line by @iArpanK v1.2", shorttitle = "RS Line by @iArpanK v1.2", overlay = true)
+
+// Calculating index price
+index = input("NIFTY", type = input.symbol, title = "Base Symbol", group = "Basic")
+index_price = security(index, timeframe.period, close)
+
+// Input New High Period
+highPeriod = input(250, type = input.integer, title = "New High Period", group = "Basic")
+
+// RS Line width
+line_width = input(3, type = input.integer, title = "RS Line Width", options = [1,2,3,4], group = "Basic")
+
+// Input RS Line color
+upColor = input(title = "RS Line Color     Growing", type = input.color, defval = color.blue, group = "Basic", inline = "RS Line Color")
+downColor = input(title = "⠀Falling", type = input.color, defval = color.fuchsia, group = "Basic", inline = "RS Line Color")
+
+// Input scaling factor
+sc_factor = input(title = "Scaling Factor", type = input.float, defval = 7, group = "Advanced")
+
+// Calculating RS & plotting it
+RS = close * sc_factor * 1000 / index_price
+linecolor = RS > RS[1] ? upColor : downColor
+plot(RS, title = "RS Line", color = linecolor, linewidth = line_width)
+
+// Label for RS name
+label_color = color.new(#0000FF, 100)
+RS_label = barstate.islast ? label.new(bar_index, RS, text = "RS Line", size = size.normal, color = label_color, textcolor = #0000FF, style = label.style_label_left, textalign = text.align_right, yloc = yloc.price, xloc = xloc.bar_index) : na
+
+// Label for RS new high
+
+highest_(values, length) =>
+    h_val = values[0]
+    h_indx = 0
+    if length >= 1
+        for i = 0 to length-1
+            if ( not na(values[i]) and values[i] > h_val  )
+                h_indx := i
+                h_val := values[i]
+    h_val
+
+lowest_(values, length) =>
+    l_val = values[0]
+    l_indx = 0
+    if length >= 1
+        for i = 0 to length-1
+            if ( not na(values[i]) and values[i] < l_val )
+                l_indx := i
+                l_val := values[i]
+    l_val
+
+data1 = RS > highest_(RS, highPeriod)[1]
+data2 = high > highest_(high, highPeriod)[1]
+data3 = RS < lowest_(RS, highPeriod)[1]
+
+plotshape(data1 ? RS : na, title = "RS New High", style = shape.circle, location = location.absolute, color = #0000FF, size = size.tiny, transp = 20)
+plotshape(data1 and not data2 ? RS : na, title = "RS New High before Price", style = shape.labeldown, location = location.absolute, text = "H", textcolor = #0000FF , color = #00FF11, size = size.auto)
+plotshape(data3 ? RS : na, title = "RS New Low", style = shape.circle, location = location.absolute, color = #FF0000, size = size.tiny, transp = 20)
