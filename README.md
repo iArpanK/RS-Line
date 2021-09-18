@@ -3,7 +3,7 @@
 
 **TradingView** indicator that measures the **Relative Strength (RS)** of a stock with respect to another base index/stock and pops alert labels when the RS Line hits a new high.
 
-![enter image description here](https://pbs.twimg.com/media/Ewa9t4lUcAQV3aF?format=jpg&name=large)
+![enter image description here](https://www.tradingview.com/x/lbqt4XJn/)
 
  Check out my indicator on [TradingView](https://in.tradingview.com/script/G6MOxSG2-Relative-Strength-Line-by-iArpanK/).
 
