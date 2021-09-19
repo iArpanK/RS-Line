@@ -1,13 +1,13 @@
 // This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
 // © Arpan_K
 // Relative Strength Line by @iArpanK
-// v1.2
+// v1.3
 
 // Find me on twitter @iArpanK
-// Check out my TradingView RS indicator at https://in.tradingview.com/script/G6MOxSG2-Relative-Strength-Line-by-iArpanK/
+// For indicators development projects in PineScript/Amibroker/Python contact me on twitter @iArpanK or drop a mail at k.arpan@outlook.com
 
 //@version=4
-study("Relative Strength Line by @iArpanK v1.2", shorttitle = "RS Line by @iArpanK v1.2", overlay = true)
+study("Relative Strength Line by @iArpanK v1.3", shorttitle = "RS Line by @iArpanK v1.3", overlay = true)
 
 // Calculating index price
 index = input("NIFTY", type = input.symbol, title = "Base Symbol", group = "Basic")
@@ -24,12 +24,20 @@ upColor = input(title = "RS Line Color     Growing", type = input.color, d
 downColor = input(title = "⠀Falling", type = input.color, defval = color.fuchsia, group = "Basic", inline = "RS Line Color")
 
 // Input scaling factor
-sc_factor = input(title = "Scaling Factor", type = input.float, defval = 7, group = "Advanced")
+sc_factor = input(title = "Scaling Factor   ", type = input.float, defval = 7, group = "Advanced")
+
+// Input moving average
+plotMA = input(title = "Moving Average", type = input.bool, defval = false, group = "Advanced", inline = "MA")
+typeMA = input(title = "", defval = "Simple", options = ["Simple", "Exponential", "Weighted"], group = "Advanced", inline = "MA")
+periodMA = input(title = "", type = input.integer, defval = 10, group = "Advanced", inline = "MA")
 
 // Calculating RS & plotting it
 RS = close * sc_factor * 1000 / index_price
 linecolor = RS > RS[1] ? upColor : downColor
 plot(RS, title = "RS Line", color = linecolor, linewidth = line_width)
+
+// Plotting moving average
+plot(plotMA ? (typeMA == "Simple" ? sma(RS, periodMA) :  typeMA == "Exponential" ? ema(RS, periodMA) : wma(RS, periodMA)) : na, color = color.new(#9598a1, 0), title = "Moving Average", linewidth = 2)
 
 // Label for RS name
 label_color = color.new(#0000FF, 100)
@@ -64,3 +72,5 @@ data3 = RS < lowest_(RS, highPeriod)[1]
 plotshape(data1 ? RS : na, title = "RS New High", style = shape.circle, location = location.absolute, color = #0000FF, size = size.tiny, transp = 20)
 plotshape(data1 and not data2 ? RS : na, title = "RS New High before Price", style = shape.labeldown, location = location.absolute, text = "H", textcolor = #0000FF , color = #00FF11, size = size.auto)
 plotshape(data3 ? RS : na, title = "RS New Low", style = shape.circle, location = location.absolute, color = #FF0000, size = size.tiny, transp = 20)
+
+// Thank You
